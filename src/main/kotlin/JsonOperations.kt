@@ -6,7 +6,7 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 
-class loadJsonFromResource{
+class JsonOperations{
     fun  loadJsonFromResource(fileName: String): SavedData? {
         try {
             val inputStream = this::class.java.getResourceAsStream(fileName)
@@ -26,7 +26,7 @@ class loadJsonFromResource{
     }
     fun writeJsonToResources(fileName: String, data: SavedData){
         val inputStream = this::class.java.getResource(fileName)
-        val file = java.io.File(inputStream.path)
+        val file = java.io.File(inputStream!!.path)
         val writer = OutputStreamWriter(FileOutputStream(file))
         Gson().toJson(data,writer)
         writer.close()

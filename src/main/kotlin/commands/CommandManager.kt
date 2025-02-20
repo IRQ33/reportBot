@@ -24,7 +24,7 @@ class CommandManager: ListenerAdapter() {
         {
             for (command in listOfCommand)
             {
-                if(!command.getOptions.isNullOrEmpty())
+                if(command.getOptions.isNotEmpty())
                 {
                     guild.upsertCommand(command.getName, command.getDescription).addOptions(command.getOptions).setDefaultPermissions(
                         DefaultMemberPermissions.enabledFor(command.getPermission)).queue()

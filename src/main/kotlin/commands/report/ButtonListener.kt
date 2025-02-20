@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
-import org.irq3.loadJsonFromResource
+import org.irq3.JsonOperations
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
@@ -23,16 +23,15 @@ class ButtonListener : ListenerAdapter() {
     }
 
     private fun report(event: ButtonInteractionEvent) {
-        val loadjs = loadJsonFromResource()
-        var data = loadjs.loadJsonFromResource("/info.json")
-        println()
-        val channel =
-            event.guild?.createTextChannel("issue" + (data?.number ?: println("can t load")))?.queue { channel ->
-                val embed = EmbedBuilder().setTitle("Problem " + (data?.number ?: 0))
-                    .setDescription("Jeśli uznasz że problem został rozwiązany kliknij w przycisk Zamknij").build()
-                val button = Button.primary("close", "Zamknij")
-                val msg = MessageCreateBuilder().addEmbeds(embed).setActionRow(button).build()
-                channel.sendMessage(msg).queue()
+        val loadjs = JsonOperations()
+        val data = loadjs.loadJsonFromResource("/info.json")
+
+        event.guild?.createTextChannel("issue " + (data?.number?.inc()))?.queue { channel ->
+            val embed = EmbedBuilder().setTitle("Problem " + (data?.number))
+                .setDescription("Jeśli uznasz że problem został rozwiązany kliknij w przycisk Zamknij").build()
+            val button = Button.primary("close", "Zamknij")
+            val msg = MessageCreateBuilder().addEmbeds(embed).setActionRow(button).build()
+            channel.sendMessage(msg).queue()
             }
         if (data != null) {
             data.number += 1
